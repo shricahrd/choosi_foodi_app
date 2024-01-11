@@ -15,14 +15,13 @@ class UserDataModel {
   String activityLevel;
   String status;
   String email;
-  String password;
   String mobile;
   String createdAt;
   String updatedAt;
-  String __v;
   String age;
   String height;
   String weight;
+  bool? isRestaurantAdded;
 
   UserDataModel(
     this.userId,
@@ -32,14 +31,13 @@ class UserDataModel {
     this.activityLevel,
     this.status,
     this.email,
-    this.password,
     this.mobile,
     this.createdAt,
     this.updatedAt,
-    this.__v,
     this.age,
     this.height,
     this.weight,
+      this.isRestaurantAdded,
   );
 
   UserDataModel.fromJson(Map<String, dynamic> json)
@@ -50,14 +48,13 @@ class UserDataModel {
         activityLevel = json['activityLevel'],
         status = json['status'],
         email = json['email'],
-        password = json['password'],
         mobile = json['mobile'],
         createdAt = json['createdAt'].toString(),
         updatedAt = json['updatedAt'].toString(),
-        __v = json['__v'].toString(),
         age = json['age'].toString(),
         height = json['height'].toString(),
-        weight = json["weight"].toString();
+        weight = json["weight"].toString(),
+        isRestaurantAdded = json["isRestaurantAdded"];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -68,14 +65,13 @@ class UserDataModel {
     data['activityLevel'] = activityLevel;
     data['status'] = status;
     data['email'] = email;
-    data['password'] = password;
     data['mobile'] = mobile;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
-    data['__v'] = __v;
     data['age'] = age;
     data['height'] = height;
     data['weight'] = weight;
+    data['isRestaurantAdded'] = isRestaurantAdded;
     return data;
   }
 }

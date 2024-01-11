@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "1013874953335",
+    "project_id": "choosi-foodi",
+    "storage_bucket": "choosi-foodi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013874953335:android:eabf3dcff539f8cec24a72",
+        "android_client_info": {
+          "package_name": "com.b2c.choosifoodi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013874953335-34a8d3946p28eikdica7f145mp3q3trs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.b2c.choosifoodi",
+            "certificate_hash": "3725aecd516754533a1e71e71761c94bf1a9c1f2"
+          }
+        },
+        {
+          "client_id": "1013874953335-qm102lmisr145stc7n1ths2o9clg2abc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.b2c.choosifoodi",
+            "certificate_hash": "bb37fd2cf9a02e036d4c6208509022abba1b383a"
+          }
+        },
+        {
+          "client_id": "1013874953335-dv921utbk6452gdp1po03tgm42ra2hlq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwOuXJmRo-0t6xKxltm3_5WGaIgRC7I80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013874953335-dv921utbk6452gdp1po03tgm42ra2hlq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1013874953335-nbmqp8ffpt6u2nrolfb814ml3vgcivlg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.b2c.choosifoodi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

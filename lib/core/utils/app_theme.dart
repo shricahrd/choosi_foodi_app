@@ -6,7 +6,7 @@ class AppTheme {
     // Default brightness and colors.
     brightness: Brightness.light,
     primaryColor: Color(ORANGE),
-    accentColor: Color(ORANGE),
+    hintColor: Color(ORANGE),
     fontFamily: 'Roboto',
   );
 }

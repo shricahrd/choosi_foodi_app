@@ -1,20 +1,5 @@
 class HttpConstants {
   /*
-  * Base Uri
-  * */
-  static const BASE_URI = "http://18.141.194.77/api/user/";
-
-  /*
-  * API Endpoints
-  * */
-  static const API_LOGIN = "login";
-  static const API_FORGET_PASSWORD = "forget-password";
-  static const API_REGISTRATION = "registration";
-  static const API_RESET_PASSWORD = "reset-password";
-  static const API_USER_PROFILE = "userProfile";
-  static const API_VIEW_FOODI_GOAL = "view-foodi-goal";
-
-  /*
   * Header Params
   * */
   static const PARAMS_AUTHKEY = "authkey";
@@ -22,9 +7,148 @@ class HttpConstants {
   /*
   * Params
   * */
+  static const PARAMS_DEVICETOKEN = "deviceToken";
   static const PARAMS_EMAIL = "email";
+  static const PARAMS_MOBILE = "mobile";
   static const PARAMS_PASSWORD = "password";
   static const PARAMS_CONFIRM_PASSWORD = "confirmPassword";
   static const PARAMS_OTP = "otp";
-  static const PARAMS_PHONE_NUMBER = "phoneNumber";
+  static const PARAMS_PHONE_NUMBER = "mobile";
+  static const PARAMS_FIRSTNAME = "firstName";
+  static const PARAMS_LASTNAME = "lastName";
+  static const PARAMS_LAT = "lat";
+  static const PARAMS_LONG = "long";
+  static const PARAMS_IS_DELIVERY = "isDelivery";
+  static const PARAMS_PROFILEPIC = "profilePic";
+  static const PARAMS_NAME = "name";
+  static const PARAMS_PHOTOURL = "photoUrl";
+  static const PARAMS_AUTHID = "authId";
+  static const PARAMS_LOGINTYPE = "loginType";
+  static const PARAMS_MESSAGE = "message";
+  static const PARAMS_MENUID = "menuId";
+  static const PARAMS_STATUS = "status";
+  static const PARAMS_SEARCH = "searchKey";
+  static const PARAMS_CONTENTPERPAGE = "contentPerPage";
+  static const PARAMS_PAGE = "page";
+  static const PARAMS_RESTID = "restaurantId";
+  static const PARAMS_RATING = "rating";
+  static const PARAMS_REVIEW = "review";
+  static const PARAMS_SELECTQTY = "selectQuantity";
+  static const PARAMS_COUPON_NAME = "couponName";
+  static const PARAMS_COUNTRYID = "countryId";
+  static const PARAMS_COUNTRYNAME = "countryName";
+  static const PARAMS_STATENAME = "stateName";
+  static const PARAMS_CITYNAME = "cityName";
+  static const PARAMS_STATEID = "stateId";
+  static const PARAMS_ADDRESSLINE = "addressLine1";
+  static const PARAMS_ADDRESSTYPE = "addressType";
+  static const PARAMS_CITYID = "cityId";
+  static const PARAMS_LANDMARK = "landmark";
+  static const PARAMS_PINCODE = "pincode";
+  static const PARAMS_CORDINATES = "coordinates";
+  static const PARAMS_ISDEFAULT = "isDefault";
+  static const PARAMS_MENUORDERID = "menuOrderId";
+  static const PARAMS_GROUP_ORDER_ID = "groupOrderId";
+  static const PARAMS_REASON = "reason";
+  static const PARAMS_ADDRESSID = "addressId";
+  static const PARAMS_CART_ID = "cartId";
+  static const PARAMS_DISHNAME = "dishName";
+  static const PARAMS_FOODTYPE = "foodType";
+  static const PARAMS_FOODTYPES = "foodTypes";
+  static const PARAMS_PRICE = "price";
+  static const PARAMS_DESCIPTION = "description";
+  static const PARAMS_DISH_TYPE = "dishType";
+  static const PARAMS_DISHVISIBLE_START = "dishVisibilityStart";
+  static const PARAMS_DISHVISIBLE_END = "dishVisibilityEnd";
+  static const PARAMS_DISTANCE = "distance";
+  static const PARAMS_DATE = "date";
+  static const PARAMS_OTHER_ADDONS = "otherAddons";
+  static const PARAMS_IS_PROFILE_COMPLETE = "isProfileComplete";
+
+  static const PARAMS_CATEGORYID1 = "categoryId";
+  static const PARAMS_TIME = "time";
+  static const PARAMS_CATEGORYID = "categoryIds";
+  static const PARAMS_ROOTCATEGORYID = "rootCategoryIds";
+  static const PARAMS_CALORIES = "calories";
+  static const PARAMS_CARBS = "carbs";
+  static const PARAMS_FAT = "fat";
+  static const PARAMS_PROTEIN = "protein";
+  static const PARAMS_FOODLOGID = "foodLogId";
+  static const PARAMS_USERID = "userId";
+  static const PARAMS_PAYMENTMETHOD = "paymentMethod";
+  static const PARAMS_DELIVERYDATE = "deliveryDate";
+  static const PARAMS_TIMESLOT = "timeSlot";
+  static const PARAMS_DEVICETYPE = "deviceType";
+  static const PARAMS_SPREQUEST = "specialRequest";
+  static const PARAMS_ORDERTYPE = "orderType";
+  static const PARAMS_GROUPNAME = "groupName";
+  static const PARAMS_SPENDING_LIMIT = "spendingLimit";
+  static const PARAMS_ADDRESS = "address";
+  static const PARAMS_GROUPID = "groupId";
+  static const PARAMS_INVITED_MEMBER = "invitedMember";
+  static const PARAMS_STRIPE_TOKEN = "stripeToken";
+  static const PARAMS_TOKEN_AMT = "tokenAmount";
+
+  static const PARAMS_ABANO = "abaNumber";
+  static const PARAMS_ACCNO = "accountNumber";
+  static const PARAMS_BANKNAME = "bankName";
+  static const PARAMS_BRANCHNAME = "branchName";
+  static const PARAMS_HOLDERNAME = "holderName";
+  static const PARAMS_ROUTINGNO = "routingNumber";
+  static const PARAMS_VENDORNAME = "vendorName";
+  static const PARAMS_VENDORIMAGE = "vendorImg";
+  static const PARAMS_VENDORDOC = "vendorDocument";
+  static const PARAMS_VENDORMENUIMG = "menuImg";
+  static const PARAMS_RESTAURANTIMG = "restaurantImg";
+  static const PARAMS_REST_NAME = "restaurantName";
+  static const PARAMS_REST_ADDRESS = "restaurantAddress";
+  static const PARAMS_REST_DELIVERYTIME = "deliveryTime";
+  static const PARAMS_REST_MANAGER_NAME = "managerName";
+  static const PARAMS_REST_MANAGER_MOBILE = "managerMobile";
+  static const PARAMS_REST_EMAIL = "restaurantEmail";
+  static const PARAMS_REST_NUMBER = "restaurantNumber";
+  static const PARAMS_OPENINGTIME = "openingTime";
+  static const PARAMS_CLOSINGTIME = "closingTime";
+  static const PARAMS_DAY = "day";
+  static const PARAMS_ISPICKUP = "isPickup";
+  static const PARAMS_ISDELIVERY = "isDelivery";
+
+  static const PARAMS_REST_GENDER = "gender";
+  static const PARAMS_REST_USERGOAL = "userGoal";
+  static const PARAMS_REST_ACTIVITY_LEVEL = "activityLevel";
+  static const PARAMS_REST_AGE = "age";
+  static const PARAMS_REST_HEIGHT = "height";
+  static const PARAMS_REST_WEIGHT = "weight";
+  static const PARAMS_REST_MEALS = "meals";
+  static const PARAMS_REST_START_TIME = "startTime";
+  static const PARAMS_REST_END_TIME = "endTime";
+  static const PARAMS_REST_DURATION = "duration";
+  static const PARAMS_REST_SLOT_ID = "slotId";
+  static const PARAMS_REST_DELIVERY_CHARGE = "deliveryCharges";
+  static const PARAMS_REST_MIN_ORDER_VAL = "minimumOrderValue";
+  static const PARAMS_REST_COUPON_ID = "couponId";
+  static const PARAMS_REST_COUPONIMG = "couponImg";
+  static const PARAMS_REST_COUPON_TYPE = "couponType";
+  static const PARAMS_REST_COUPON_NAME = "couponName";
+  static const PARAMS_REST_DISCOUNT_IN = "discountIn";
+  static const PARAMS_REST_DISCOUNT = "discount";
+  static const PARAMS_REST_MAX_DISCOUNT = "maxDiscount";
+  static const PARAMS_REST_DESC = "description";
+  static const PARAMS_REST_SHOWINAPP = "showInApp";
+  static const PARAMS_REST_COUPONFOR = "couponFor";
+  static const PARAMS_REST_CATEGORYIMG = "categoryImg";
+  static const PARAMS_REST_CATEGORYNAME = "categoryName";
+  static const PARAMS_REST_CATEGORYID = "categoryId";
+  static const PARAMS_REST_STARTDATE = "startDate";
+  static const PARAMS_REST_ENDDATE = "endDate";
+
+  static const PARAMS_REST_USECOUNT = "useCount";
+  static const PARAMS_REST_PERUSECOUNT = "perUserUseCount";
+  static const PARAMS_REST_MIN_CART_AMT = "minCartAmount";
+  static const PARAMS_REST_MAX_CART_AMT = "maxCartAmount";
+  static const PARAMS_REST_ISSUE_DATE = "issueDate";
+  static const PARAMS_REST_EXPIRY_DATE = "expiryDate";
+  static const PARAMS_REST_TOTAL_COUPON = "totalCoupon";
+  static const PARAMS_REST_OTHER_ADDONS = "otherAddons";
+
 }

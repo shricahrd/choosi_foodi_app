@@ -1,29 +1,52 @@
+import 'dart:convert';
+
 import 'package:choosifoodi/core/utils/app_color_utils.dart';
 import 'package:choosifoodi/core/utils/app_images_utils.dart';
 import 'package:choosifoodi/core/widgets/widget_round_radio_button.dart';
 import 'package:choosifoodi/core/widgets/widget_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../restaurant_details/controller/restaurant_details_controller.dart';
+import '../restaurant_details/model/post_food_model.dart';
+import '../restaurant_details/model/restaurant_details_model.dart';
 
 class FoodItemAddScreen extends StatefulWidget {
-  final bool isGroupOrder;
 
-  const FoodItemAddScreen({Key? key, required this.isGroupOrder})
+   List<OtherAddonsItem>? otherAddonsList;
+   String foodTitle;
+  dynamic menuId, selectQty, restId;
+
+   FoodItemAddScreen({Key? key, required this.foodTitle, required this.otherAddonsList,
+     required this.menuId,  required this.selectQty, required this.restId, })
       : super(key: key);
 
   @override
   _FoodItemAddScreenState createState() =>
-      _FoodItemAddScreenState(isGroupOrder);
+      _FoodItemAddScreenState(otherAddonsList!);
 }
 
 class _FoodItemAddScreenState extends State<FoodItemAddScreen> {
+  final RestaurantDetailsController restController =
+  Get.put(RestaurantDetailsController());
+  List<OtherAddonsItem> otherAddonsList = [];
   int _proteinValue = 0;
   int _sauceChoices = 0;
+  bool isAddToCart = false;
 
-  bool isGroupOrder = false;
+  _FoodItemAddScreenState( List<OtherAddonsItem> otherAddonsList) {
+    this.otherAddonsList = otherAddonsList;
+  }
 
-  _FoodItemAddScreenState(bool isGroupOrder) {
-    this.isGroupOrder = isGroupOrder;
+  List<PostFoodModel> postFoodModel= [];
+
+
+  @override
+  void initState() {
+  print('otherAddonsList: ${otherAddonsList.length}');
+  print('item init ====> : ${jsonEncode(postFoodModel.map((data) => data.toMap()).toList())}');
+    super.initState();
   }
 
   @override
@@ -72,230 +95,191 @@ class _FoodItemAddScreenState extends State<FoodItemAddScreen> {
       body: SafeArea(
         child: Card(
           margin: EdgeInsets.all(20),
-          color: Color(WHITE),
           elevation: 5.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: ListView(
-            physics: BouncingScrollPhysics(),
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Center(
-                child: WidgetText.widgetPoppinsRegularText(
-                  "Food Item Title",
-                  Color(BLACK),
-                  20,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color(WHITE),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: ListView(
+              physics: BouncingScrollPhysics(),
+              children: [
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-              Center(
-                child: WidgetText.widgetPoppinsRegularText(
-                  "lorem ipsum dolor sit amet",
-                  Color(DARKGREY),
-                  15,
+                Center(
+                  child: WidgetText.widgetPoppinsRegularText(
+                    // "Food Item Title",
+                    widget.foodTitle,
+                    Color(BLACK),
+                    20,
+                  ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Color(WHITE),
-                  shape: BoxShape.rectangle,
-                  border: Border.all(color: Color(ORANGE), width: 1),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+              /*  Center(
+                  child: WidgetText.widgetPoppinsRegularText(
+                    "lorem ipsum dolor sit amet",
+                    Color(DARKGREY),
+                    15,
+                  ),
+                ),*/
+
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: otherAddonsList.length,
+                  itemBuilder: (context, index) {
+
+                    List<OptionsItem>? optionList = [];
+                    optionList = otherAddonsList[index].options;
+
+                    return Container(
+                      margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Color(WHITE),
+                        shape: BoxShape.rectangle,
+                        border: Border.all(color: Color(ORANGE), width: 1),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          Align(
+                            child: WidgetText.widgetPoppinsRegularText(
+                              // "Protein Option",
+                              otherAddonsList[index].title,
+                              Color(BLACK),
+                              20,
+                            ),
+                            alignment: Alignment.center,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          WidgetText.widgetPoppinsRegularText(
+                            "Select 1",
+                            Color(SUBTEXT),
+                            16,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: optionList?.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  margin: EdgeInsets.only(top: 15),
+                                  child:  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        for(int i=0; i<(optionList?.length ?? 0); i++) {
+                                          if (optionList![i].isSelect == true) {
+                                            optionList[i].setCheckedOption = false;
+                                          }
+                                        }
+                                        optionList![index].setCheckedOption = true;
+                                       /* if(optionList[index].isSelect == true){
+                                          postFoodModel.add(PostFoodModel(title: otherAddonsList[index].title,option: optionList[index].option ));
+                                          print('item before reverse ====> : ${jsonEncode(postFoodModel.map((data) => data.toMap()).toList())}');
+                                        }*/
+                                      });
+                                    },
+                                    child:
+                                    optionList![index].isSelect
+                                        ? WidgetRoundRadioButton.selectRadioButton(
+                                        // "Veggie"
+                                      optionList[index].option,
+                                    )
+                                        : WidgetRoundRadioButton
+                                        .unselectedRoundRadioButton(
+                                      optionList[index].option,
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ],
+                      ),
+                    );
+                  }
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      child: WidgetText.widgetPoppinsRegularText(
-                        "Protein Option",
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      /*WidgetText.widgetPoppinsRegularText(
+                        "All Special Instructions",
                         Color(BLACK),
-                        20,
+                        18,
                       ),
-                      alignment: Alignment.center,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    WidgetText.widgetPoppinsRegularText(
-                      "Select 1",
-                      Color(SUBTEXT),
-                      16,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _proteinValue = 0;
-                        });
-                      },
-                      child: _proteinValue == 0
-                          ? WidgetRoundRadioButton.selectedRoundRadioButton(
-                              "Veggie")
-                          : WidgetRoundRadioButton.unselectedRoundRadioButton(
-                              "Veggie"),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _proteinValue = 1;
-                        });
-                      },
-                      child: _proteinValue == 1
-                          ? WidgetRoundRadioButton.selectedRoundRadioButton(
-                              "Soy")
-                          : WidgetRoundRadioButton.unselectedRoundRadioButton(
-                              "Soy"),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _proteinValue = 2;
-                        });
-                      },
-                      child: _proteinValue == 2
-                          ? WidgetRoundRadioButton.selectedRoundRadioButton(
-                              "Lentill")
-                          : WidgetRoundRadioButton.unselectedRoundRadioButton(
-                              "Lentill"),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Color(WHITE),
-                  shape: BoxShape.rectangle,
-                  border: Border.all(color: Color(ORANGE), width: 1),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      child: WidgetText.widgetPoppinsRegularText(
-                        "Sauce Choices",
+                      WidgetText.widgetPoppinsRegularText(
+                        "Add any instructions for your order here...",
                         Color(BLACK),
-                        20,
+                        14,
                       ),
-                      alignment: Alignment.center,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    WidgetText.widgetPoppinsRegularText(
-                      "Select 1",
-                      Color(SUBTEXT),
-                      16,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _proteinValue = 0;
-                        });
-                      },
-                      child: _proteinValue == 0
-                          ? WidgetRoundRadioButton.selectedRoundRadioButton(
-                              "Sauce 1")
-                          : WidgetRoundRadioButton.unselectedRoundRadioButton(
-                              "Sauce 1"),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _proteinValue = 1;
-                        });
-                      },
-                      child: _proteinValue == 1
-                          ? WidgetRoundRadioButton.selectedRoundRadioButton(
-                              "Sauce 2")
-                          : WidgetRoundRadioButton.unselectedRoundRadioButton(
-                              "Sauce 2"),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _proteinValue = 2;
-                        });
-                      },
-                      child: _proteinValue == 2
-                          ? WidgetRoundRadioButton.selectedRoundRadioButton(
-                              "Sauce 3")
-                          : WidgetRoundRadioButton.unselectedRoundRadioButton(
-                              "Sauce 3"),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    WidgetText.widgetPoppinsRegularText(
-                      "All Special Instructions",
-                      Color(BLACK),
-                      18,
-                    ),
-                    WidgetText.widgetPoppinsRegularText(
-                      "Add any instructions for your order here...",
-                      Color(BLACK),
-                      14,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    InkWell(
-                      onTap: onClickAddToOrder,
-                      child: Container(
-                        width: 130,
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                        decoration: BoxDecoration(
-                          color: Color(ORANGE),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(7)),
+                      SizedBox(
+                        height: 15,
+                      ),*/
+                      isAddToCart == true ? Center(
+                        child:
+                        CircularProgressIndicator(
+                          color:
+                          Color(ORANGE),
                         ),
-                        alignment: Alignment.center,
-                        child: WidgetText.widgetPoppinsMediumText(
-                          "Add to order",
-                          Color(WHITE),
-                          14,
+                      ) :
+                      InkWell(
+                        onTap: () async {
+
+                          for(int i=0; i<otherAddonsList.length; i++){
+                            for(int j=0; j<(otherAddonsList[i].options?.length ?? 0) ; j++) {
+                              if (otherAddonsList[i].options?[j].isSelect == true) {
+                                postFoodModel.add(PostFoodModel(title: otherAddonsList[i].title,
+                                    option: otherAddonsList[i].options?[j].option ?? ""));
+                                print('item before reverse ====> : ${jsonEncode(
+                                    postFoodModel.map((data) => data.toMap()).toList())}');
+                              }
+                            }
+                          }
+                          setState(() {
+                            isAddToCart = true;
+                          });
+                          await restController.postAddCardApi(restId: widget
+                              .restId.toString(),
+                              menuId: widget.menuId.toString(),selectQty: widget.selectQty, isAddOn: true, otherAddList: postFoodModel);
+                          setState(() {
+                            isAddToCart = false;
+                            Navigator.of(context).pop(true);
+                          });
+                        },
+                        child: Container(
+                          width: 130,
+                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          decoration: BoxDecoration(
+                            color: Color(ORANGE),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(7)),
+                          ),
+                          alignment: Alignment.center,
+                          child: WidgetText.widgetPoppinsMediumText(
+                            "Add to order",
+                            Color(WHITE),
+                            14,
+                          ),
                         ),
+                      ) ,
+                      SizedBox(
+                        height: 15,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

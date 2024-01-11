@@ -5,17 +5,60 @@ import 'package:choosifoodi/core/widgets/widget_radio_button.dart';
 import 'package:choosifoodi/core/widgets/widget_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
+import '../foodi_goal/view/foodi_goal_add_edit.dart';
 
 class FilterDialogScreen extends StatefulWidget {
+  var filterValue;
+
+  FilterDialogScreen({this.filterValue,});
+
   @override
   _FilterDialogScreenState createState() => _FilterDialogScreenState();
 }
 
 class _FilterDialogScreenState extends State<FilterDialogScreen> {
-  bool macroCal = true;
-  int _dietaryValue = 0;
-  double _distanceValue = 10.0;
+  bool macroCal = false;
+  // String _dietaryValue = "Vegetarian";
+  double _distanceValue = 500.0;
+  List filterfoodList = [];
+  var distance;
+  // List isCheked = [false, false, false, false, false];
+
+  List<Map> availablefoodType = [
+    {"name": "Vegetarian", "isChecked": false},
+    {"name": "Vegan", "isChecked": false},
+    {"name": "Pescatarian", "isChecked": false,},
+    {"name": "Keto", "isChecked": false},
+    {"name": "Dairy Free", "isChecked": false},
+  ];
+
+  @override
+  void initState() {
+    print('foodType : ${widget.filterValue.toString()}');
+   if(widget.filterValue != null){
+     filterfoodList = widget.filterValue[0];
+     for(int i = 0; i<filterfoodList.length; i++){
+       print('foodType List $i: ${filterfoodList[i]}');
+     }
+     getFoodTypeCheck();
+     distance = widget.filterValue[1].toString();
+     print('distance: $distance');
+     _distanceValue = double.parse(distance);
+     print('_distanceValue: $_distanceValue');
+   }
+    super.initState();
+  }
+
+  getFoodTypeCheck() {
+    print('getFoodTypeCheck');
+    for (int i = 0; i < filterfoodList.length; i++) {
+      if (filterfoodList[i] == availablefoodType[i]['name']) {
+        availablefoodType[i]["isChecked"] = true;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,17 +139,21 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                                       height: 3,
                                     ),
                                     WidgetText.widgetPoppinsRegularText(
-                                      "You can turn your macro calculator on/off depending on your foodi intention.",
+                                      "You can turn your Foodi Goal on/off depending on your food intention.",
                                       Color(LIGHTERHINTCOLOR),
                                       12,
                                     ),
                                     SizedBox(
                                       height: 10,
                                     ),
-                                    WidgetText.widgetPoppinsRegularText(
-                                      "Edit Goal",
-                                      Color(ORANGE),
-                                      14,
+                                    InkWell(
+                                      onTap: ()=> Get.to(FoodiGoalAddEditScreen(
+                                        isEditFoodiGoal: false, isFromHome: false,)),
+                                      child: WidgetText.widgetPoppinsRegularText(
+                                        "Edit Goal",
+                                        Color(ORANGE),
+                                        14,
+                                      ),
                                     )
                                   ],
                                 ),
@@ -152,10 +199,11 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      _dietaryValue = 0;
+                                      availablefoodType[0]['name'] = "Vegetarian";
+                                      availablefoodType[0]['isChecked'] = !availablefoodType[0]['isChecked'];
                                     });
                                   },
-                                  child: _dietaryValue == 0
+                                  child:  availablefoodType[0]['isChecked'] == true
                                       ? WidgetRadioButton.selectedRadioButton(
                                           "Vegetarian")
                                       : WidgetRadioButton.unselectedRadioButton(
@@ -167,10 +215,11 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      _dietaryValue = 1;
+                                      availablefoodType[1]['name'] = "Vegan";
+                                      availablefoodType[1]['isChecked'] = !availablefoodType[1]['isChecked'];
                                     });
                                   },
-                                  child: _dietaryValue == 1
+                                  child:  availablefoodType[1]['isChecked'] == true
                                       ? WidgetRadioButton.selectedRadioButton(
                                           "Vegan")
                                       : WidgetRadioButton.unselectedRadioButton(
@@ -182,10 +231,11 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      _dietaryValue = 2;
+                                      availablefoodType[2]['name'] = "Pescatarian";
+                                      availablefoodType[2]['isChecked'] = !availablefoodType[2]['isChecked'];
                                     });
                                   },
-                                  child: _dietaryValue == 2
+                                  child:  availablefoodType[2]['isChecked'] == true
                                       ? WidgetRadioButton.selectedRadioButton(
                                           "Pescatarian")
                                       : WidgetRadioButton.unselectedRadioButton(
@@ -203,10 +253,11 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      _dietaryValue = 3;
+                                      availablefoodType[3]['name'] = "Keto";
+                                      availablefoodType[3]['isChecked'] = !availablefoodType[3]['isChecked'];
                                     });
                                   },
-                                  child: _dietaryValue == 3
+                                  child: availablefoodType[3]['isChecked'] == true
                                       ? WidgetRadioButton.selectedRadioButton(
                                           "Keto")
                                       : WidgetRadioButton.unselectedRadioButton(
@@ -218,10 +269,11 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      _dietaryValue = 4;
+                                      availablefoodType[4]['name'] = "Dairy Free";
+                                      availablefoodType[4]['isChecked'] = !availablefoodType[4]['isChecked'];
                                     });
                                   },
-                                  child: _dietaryValue == 4
+                                  child: availablefoodType[4]['isChecked'] == true
                                       ? WidgetRadioButton.selectedRadioButton(
                                           "Dairy Free")
                                       : WidgetRadioButton.unselectedRadioButton(
@@ -240,6 +292,10 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                           SizedBox(
                             height: 20,
                           ),
+
+                          SizedBox(
+                            height: 20,
+                          ),
                           WidgetText.widgetPoppinsMediumText(
                             "Distance",
                             Color(BLACK),
@@ -249,8 +305,8 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                             height: 0,
                           ),
                           SfSlider(
-                            min: 5.0,
-                            max: 50.0,
+                            min: 0.0,
+                            max: 500.0,
                             interval: 1,
                             activeColor: Color(ORANGE),
                             inactiveColor: Color(GREY),
@@ -270,6 +326,7 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                             onChanged: (dynamic value) {
                               setState(() {
                                 _distanceValue = value;
+                                print('_distanceValue: $_distanceValue');
                               });
                             },
                           ),
@@ -281,7 +338,7 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                                   child: Align(
                                     alignment: Alignment.topLeft,
                                     child: WidgetText.widgetPoppinsRegularText(
-                                      "5mi",
+                                      "0mi",
                                       Color(BLACK),
                                       16,
                                     ),
@@ -291,7 +348,8 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
                                   child: Align(
                                     alignment: Alignment.topRight,
                                     child: WidgetText.widgetPoppinsRegularText(
-                                      "50mi",
+                                      // "500mi",
+                                      _distanceValue.ceil().toString() +"mi",
                                       Color(BLACK),
                                       16,
                                     ),
@@ -322,6 +380,18 @@ class _FilterDialogScreenState extends State<FilterDialogScreen> {
   }
 
   onClickFilterApply() {
-    Navigator.of(context).pop(true);
+    List foodTypeList = [];
+    for (int i = 0; i < availablefoodType.length; i++) {
+      if (availablefoodType[i]["isChecked"] == true) {
+        foodTypeList.add(availablefoodType[i]["name"]);
+        print('Dietry List: $foodTypeList');
+      }
+    }
+    Get.back(result: [
+      foodTypeList,
+      _distanceValue.ceil().toString(),
+    ]);
+    // Navigator.of(context).pop(true);
   }
 }
+

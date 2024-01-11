@@ -1,32 +1,44 @@
 import 'package:choosifoodi/core/utils/app_color_utils.dart';
+import 'package:choosifoodi/core/utils/app_constants.dart';
 import 'package:choosifoodi/core/utils/app_images_utils.dart';
-import 'package:choosifoodi/core/utils/app_preferences.dart';
 import 'package:choosifoodi/core/widgets/widget_text.dart';
-import 'package:choosifoodi/screens/cart/cart_screen.dart';
-import 'package:choosifoodi/screens/food_detail/foodi_facts.dart';
-import 'package:choosifoodi/screens/food_log/food_log_screen.dart';
-import 'package:choosifoodi/screens/foodi_goal/foodi_goal_add_edit.dart';
-import 'package:choosifoodi/screens/login/start_screen.dart';
-import 'package:choosifoodi/screens/orders/orders_screen.dart';
-import 'package:choosifoodi/screens/profile/profile_screen.dart';
-import 'package:choosifoodi/screens/setting/abount_us_screen.dart';
-import 'package:choosifoodi/screens/setting/contact_us_screen.dart';
-import 'package:choosifoodi/screens/setting/faq_screen.dart';
-import 'package:choosifoodi/screens/setting/privacy_policy.dart';
-import 'package:choosifoodi/screens/setting/return_policy_screen.dart';
-import 'package:choosifoodi/screens/setting/terms_screen.dart';
+import 'package:choosifoodi/screens/cart/view/cart_screen.dart';
+import 'package:choosifoodi/screens/food_detail/view/foodi_facts.dart';
+import 'package:choosifoodi/screens/food_log/view/food_log_screen.dart';
+import 'package:choosifoodi/screens/foodi_goal/view/foodi_goal_add_edit.dart';
+import 'package:choosifoodi/screens/setting/view/abount_us_screen.dart';
+import 'package:choosifoodi/screens/contact_us/view/contact_us_screen.dart';
+import 'package:choosifoodi/screens/setting/view/faq_screen.dart';
+import 'package:choosifoodi/screens/setting/view/privacy_policy.dart';
+import 'package:choosifoodi/screens/setting/view/terms_screen.dart';
 import 'package:flutter/material.dart';
+import '../../core/utils/app_strings_constants.dart';
+import '../foodi_goal/view/foodi_goal_result.dart';
+import '../orders/view/orders_screen.dart';
+import '../profile/view/profile_screen.dart';
 
 class SettingScreen extends StatefulWidget {
+  final bool isEditFoodiGoal;
+
+  SettingScreen({required this.isEditFoodiGoal});
+
   @override
-  _SettingScreenState createState() => _SettingScreenState();
+  _SettingScreenState createState() => _SettingScreenState(isEditFoodiGoal);
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  bool isEditFoodiGoal = false;
+
+  _SettingScreenState(bool isEditFoodiGoal){
+    this.isEditFoodiGoal = isEditFoodiGoal;
+  }
+
   @override
   void initState() {
+    debugPrint('isEditFoodiGoal: $isEditFoodiGoal');
     super.initState();
   }
+  // FoodiGoalResultScreen
 
   @override
   Widget build(BuildContext context) {
@@ -91,19 +103,19 @@ class _SettingScreenState extends State<SettingScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  _menuWidget("Contact us", onClickContactUs),
+                  _menuWidget("Contact Us", onClickContactUs),
                   SizedBox(
                     height: 20,
                   ),
-                  _menuWidget("About us", onClickAboutUs),
+                  _menuWidget("About Us", onClickAboutUs),
+                /*  SizedBox(
+                    height: 20,
+                  ),
+                  _menuWidget("FAQs", onClickFaq),*/
                   SizedBox(
                     height: 20,
                   ),
-                  _menuWidget("FAQs", onClickFaq),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _menuWidget("Terms & condition", onClickTerms),
+                  _menuWidget("Terms & Condition", onClickTerms),
                   SizedBox(
                     height: 20,
                   ),
@@ -174,6 +186,9 @@ class _SettingScreenState extends State<SettingScreen> {
       padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
       child: InkWell(
         onTap: function,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
         child: Row(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -206,7 +221,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 color: Color(BLACK), fontSize: 20, fontWeight: FontWeight.w600),
           ),
           content: Text(
-            'Are you sure? You want to logout?',
+            wantLogout,
             style: TextStyle(
                 color: Color(BLACK), fontSize: 14, fontWeight: FontWeight.w400),
           ),
@@ -225,7 +240,7 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             TextButton(
               child: Text(
-                'Ok',
+                'Yes',
                 style: TextStyle(
                     color: Color(BLACK),
                     fontSize: 14,
@@ -233,11 +248,9 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                AppPreferences.clearPreferenceData();
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => StartScreen()),
-                    (r) => false);
+                tokenExpire();
+                // AppPreferences.clearPreferenceData();
+                // Get.offAndToNamed(AllRoutes.start);
               },
             ),
           ],
@@ -247,19 +260,29 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   onClickProfile() {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (BuildContext context) => ProfileScreen()));
+      debugPrint('OnTap to Profile');
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ProfileScreen()));
   }
 
   onClickOrder() {
+      debugPrint('OnTap to Order');
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (BuildContext context) => OrdersScreen()));
+        MaterialPageRoute(builder: (BuildContext context) => OrderScreen()));
   }
 
   onClickFoodiGoal() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => FoodiGoalAddEditScreen(
-            isEditFoodiGoal: false, isFromHome: false,isFromSignup: false,)));
+    debugPrint('isEditFoodiGoal: $isEditFoodiGoal');
+    if(isEditFoodiGoal == true) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) =>
+              FoodiGoalResultScreen(
+                isFromHome: false,isEdit: true,)));
+    }else{
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) =>
+              FoodiGoalAddEditScreen(
+                isEditFoodiGoal: false, isFromHome: false,)));
+    }
   }
 
   onClickFoodiLog() {
@@ -302,8 +325,4 @@ class _SettingScreenState extends State<SettingScreen> {
         builder: (BuildContext context) => PrivacyPolicyScreen()));
   }
 
-  onClickReturnPolicy() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => ReturnPolicyScreen()));
-  }
 }
