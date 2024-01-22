@@ -117,7 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                          mainAxisAlignment: MainAxisAlignment.center,
                                          children: [
                                            WidgetText.widgetPoppinsBoldText(
-                                             logic.vendorDashboardModel.data?.totalSale.round().toString() ?? '1000',
+                                             logic.vendorDashboardModel.data?.totalSale.toStringAsFixed(2) ?? '0',
                                              Color(BLACK),
                                              18,
                                            ),
@@ -137,11 +137,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                ),
                              ),
                            ),
-                           flex: 1,
-                           fit: FlexFit.loose,
                          ),
                          SizedBox(
-                           width: 20,
+                           width: 10,
                          ),
                          Flexible(
                            child: Card(
@@ -176,7 +174,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                          mainAxisAlignment: MainAxisAlignment.center,
                                          children: [
                                            WidgetText.widgetPoppinsBoldText(
-                                             logic.vendorDashboardModel.data?.totalComission.round().toString() ?? '500',
+                                             // logic.vendorDashboardModel.data?.totalComission.round().toString() ?? '500',
+                                             logic.vendorDashboardModel.data?.totalComission.toStringAsFixed(2) ?? '0',
                                              Color(BLACK),
                                              18,
                                            ),
@@ -196,8 +195,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                ),
                              ),
                            ),
-                           flex: 1,
-                           fit: FlexFit.loose,
                          ),
                        ],
                      ),

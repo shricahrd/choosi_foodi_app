@@ -17,7 +17,7 @@ import '../model/normal_rest_order_model.dart';
 class NormalRestOrderController extends GetxController {
   NormalRestOrderModel normalRestOrderModel = NormalRestOrderModel();
   List<NormalRestDataList> getFilterOrderModel = [];
-  int orderStatus = 0;
+  // int orderStatus = 0;
   bool isLoaderVisible = true;
   bool isOrderChanged = false;
   MetaModel metaModel = MetaModel();
@@ -105,8 +105,7 @@ class NormalRestOrderController extends GetxController {
   }
 
   Future<void> callRestGetOrderAPI(
-      {required List filterType,
-      required String searchString,
+      {required String searchString,
        dynamic startDateSearch,
        dynamic endDateSearch,
        dynamic orderType}) async{
@@ -119,26 +118,12 @@ class NormalRestOrderController extends GetxController {
         debugPrint('endDateinMiliSec $endDateSearch');
     }
 
-    debugPrint('filterType: $filterType');
-
-      if(filterType.contains(1)){
-        orderStatusFilter = 1;
-      }else if(filterType.contains(6)){
-        orderStatusFilter = 6;
-      }else{
-        orderStatusFilter = 7;
-      }
-      debugPrint('orderStatusFilter: $orderStatusFilter');
-      // update();
-
     if(orderType == selOrderType){
       orderType = "";
     }else{
       debugPrint('orderType: $orderType');
     }
 
-
-    // orderStatus1 = orderStatus1.toUpperCase();
     String url = GeneralPath.API_GET_ORDER +
         "?orderStatus=$orderStatusFilter&searchKey=$searchString&startDate=$startDateSearch&endDate=$endDateSearch&orderType=$orderType";
     getFilterOrderModel.clear();
@@ -149,28 +134,23 @@ class NormalRestOrderController extends GetxController {
         normalRestOrderModel =
             NormalRestOrderModel.fromJson(json.decode(response.body));
         if (normalRestOrderModel.meta?.status == true) {
-          debugPrint('status true: ${normalRestOrderModel.meta?.status}');
-          debugPrint('Response Data: ${normalRestOrderModel.data}');
+          // debugPrint('status true: ${normalRestOrderModel.meta?.status}');
+          // debugPrint('Response Data: ${normalRestOrderModel.data}');
 
-          int len = 0;
+          // int len = 0;
           for (int i = 0; i < (normalRestOrderModel.data?.length ?? 0); i++) {
             String currentName = normalRestOrderModel.data?[i].menuOrderID ?? "";
-            for (int j = 0; j < filterType.length; j++) {
-              // Check if the name is not in the Set (not a duplicate)
-              if (!uniqueNames.contains(currentName)) {
-                normalRestOrderModel.data?[i].setCreatedDate = parseTimeStampReport(normalRestOrderModel.data?[i].createdAt);
-                normalRestOrderModel.data?[i].setDeliveryDate = parseDeliveryTime(normalRestOrderModel.data?[i].deliveryDate);
-                if (normalRestOrderModel.data?[i].orderStatus == filterType[j]) {
-                  len++;
-                  getFilterOrderModel.add(normalRestOrderModel.data![i]);
-                }
-                uniqueNames.add(currentName);
-              }
-
+            if (!uniqueNames.contains(currentName)) {
+              normalRestOrderModel.data?[i].setCreatedDate = parseTimeStampReport(normalRestOrderModel.data?[i].createdAt);
+              normalRestOrderModel.data?[i].setDeliveryDate = parseDeliveryTime(normalRestOrderModel.data?[i].deliveryDate);
+              normalRestOrderModel.data?[i].setOrderStatus = getOrderByName(val: normalRestOrderModel.data?[i].orderStatus ?? 0,
+                  isDelivery: normalRestOrderModel.data?[i].orderType ?? "");
+              getFilterOrderModel.add(normalRestOrderModel.data![i]);
+              uniqueNames.add(currentName);
             }
           }
 
-          orderStatus = len;
+          // orderStatus = len;
           update();
           debugPrint('OrderStatus Len: $orderStatus');
           isLoaderVisible = false;
@@ -178,7 +158,7 @@ class NormalRestOrderController extends GetxController {
         } else {
           // showToastMessage(normalRestOrderModel.meta!.msg.toString());
           debugPrint(normalRestOrderModel.meta?.msg.toString());
-          orderStatus = 0;
+          // orderStatus = 0;
           isLoaderVisible = false;
           update();
         }

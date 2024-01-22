@@ -2,10 +2,8 @@ import 'package:choosifoodi/core/utils/app_color_utils.dart';
 import 'package:choosifoodi/core/utils/app_images_utils.dart';
 import 'package:choosifoodi/core/widgets/widget_button.dart';
 import 'package:choosifoodi/core/widgets/widget_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_font_utils.dart';
 import '../../../../core/utils/app_strings_constants.dart';
@@ -36,8 +34,6 @@ class _NormalRestOrderScreenState extends State<NormalRestOrderScreen> {
   String searchString = "";
   dynamic startDate = "", endDate = "", orderTypeData = "";
   int orderType = 1;
-  List orderStatusType = [];
-  // String createdDate = "", orderPlacedDate = "";
   List statusList = [];
   Map<String, dynamic> receivedData = {};
   double fontSize = 13.0;
@@ -49,17 +45,13 @@ class _NormalRestOrderScreenState extends State<NormalRestOrderScreen> {
     setState(() {
       _normalRestOrderController.isLoaderVisible = true;
     });
-    if (orderType == 1) {
-      List filterList = [1, 2, 3, 4, 5];
-      orderStatusType = filterList;
-    } else if (orderType == 2) {
-      orderStatusType.add(6);
-    } else {
-      orderStatusType.add(7);
+    if(widget.orderType == 2){
+      _normalRestOrderController.orderStatusFilter = 6;
+    }else if(widget.orderType == 3){
+      _normalRestOrderController.orderStatusFilter = 7;
     }
-
     await _normalRestOrderController.callRestGetOrderAPI(
-      filterType: orderStatusType,
+      // filterType: orderStatusType,
       searchString: searchString,
       startDateSearch: startDate,
       endDateSearch: endDate,
@@ -73,9 +65,8 @@ class _NormalRestOrderScreenState extends State<NormalRestOrderScreen> {
         selectOrderStatus,
         orderReceive,
         beingPrepare,
-        ready,
+        outforDelivery,
         delivered,
-        canceled,
       ];
     }else {
       statusList = [
@@ -84,16 +75,12 @@ class _NormalRestOrderScreenState extends State<NormalRestOrderScreen> {
         beingPrepare,
         readyPickup,
         picked,
-        canceled,
       ];
     }
-
-    // debugPrint('statusList : ${statusList.toString()}');
   }
 
   @override
   void initState() {
-    // debugPrint('StatusList: ${statusList[0]}');
     debugPrint('Init Order Type : $orderType');
     if (_networkManager.connectionType != 0) {
       debugPrint('Connection Type: ${_networkManager.connectionType}');
@@ -111,22 +98,6 @@ class _NormalRestOrderScreenState extends State<NormalRestOrderScreen> {
       checkOrderStatus();
     }
   }
-
- /* String parseTimeStampReport(int created) {
-    var date = DateTime.fromMicrosecondsSinceEpoch(created * 1000);
-    var d12 = formatterDateTime.format(date);
-    createdDate = d12;
-    debugPrint('CreatedDAte: $createdDate,');
-    return d12;
-  }
-
-  String parseTimeStampOrderPlaced(int orderPlaced) {
-    var date2 = DateTime.fromMicrosecondsSinceEpoch(orderPlaced * 1000);
-    var d2 = formatterDateTime.format(date2);
-    orderPlacedDate = d2;
-    debugPrint('OrderPlacedDate: $orderPlacedDate');
-    return d2;
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +195,7 @@ class _NormalRestOrderScreenState extends State<NormalRestOrderScreen> {
                               child: CircularProgressIndicator(
                               color: Color(ORANGE),
                             ))
-                          : logic.orderStatus == 0
+                          : logic.getFilterOrderModel.length == 0
                               ? Center(
                                   child:
                                   WidgetText.widgetPoppinsMediumText(
@@ -236,10 +207,10 @@ class _NormalRestOrderScreenState extends State<NormalRestOrderScreen> {
                                   width: double.infinity,
                                   child: ListView.builder(
                                       physics: BouncingScrollPhysics(),
-                                      itemCount: logic.orderStatus,
+                                      itemCount: logic.getFilterOrderModel.length,
                                       itemBuilder: (context, index) {
 
-                                        debugPrint('OrderStatus screen len: ${logic.orderStatus}');
+                                        // debugPrint('OrderStatus screen len: ${logic.orderStatus}');
                                         debugPrint('OrderStatus logic.getFilterOrderModel[index].orderType: ${logic.getFilterOrderModel[index].orderType}');
 
                                         if(logic.getFilterOrderModel[index].orderType == 'DELIVERY') {
@@ -580,9 +551,14 @@ class _NormalRestOrderScreenState extends State<NormalRestOrderScreen> {
                                                                     onChanged:
                                                                         (value) {
                                                                       setState(() {
-                                                                        debugPrint("Check   ${logic.getFilterOrderModel[index].selectedOrderStatus}");
-                                                                            value.toString().isNotEmpty?
-                                                                            logic.getFilterOrderModel[index].setSelectedStatus = value.toString():logic.getFilterOrderModel[index].selectedOrderStatus ="";
+                                                                        debugPrint("selectedOrderStatus click==> ${logic.getFilterOrderModel[index].selectedOrderStatus}");
+                                                                        debugPrint("onChanged value   $value");
+                                                                        if(value.toString().isNotEmpty){
+                                                                          logic.getFilterOrderModel[index].setSelectedStatus = value.toString();
+                                                                        }else{
+                                                                          logic.getFilterOrderModel[index].setSelectedStatus = "";
+                                                                        }
+
                                                                         if (logic.getFilterOrderModel[index].selectedOrderStatus != selectOrderStatus) {
                                                                           var statusData = getOrderId(logic.getFilterOrderModel[index].selectedOrderStatus);
                                                                           callChangeOrderStatus(menuId: logic.getFilterOrderModel[index].menuOrderId.toString(), statusId: statusData);
@@ -791,6 +767,7 @@ class _NormalRestOrderScreenState extends State<NormalRestOrderScreen> {
         receivedData = result;
         debugPrint("receivedData=======> $receivedData");
         debugPrint("receivedData selectOrderType=======> ${receivedData['selectOrderType']}");
+        _normalRestOrderController.orderStatusFilter = receivedData['orderStatus'];
         startDate = receivedData["startDateSearch"];
         endDate = receivedData["endDateSearch"];
         orderTypeData = receivedData["selectOrderType"];

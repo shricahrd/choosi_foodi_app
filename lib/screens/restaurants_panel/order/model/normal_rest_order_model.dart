@@ -115,6 +115,10 @@ class NormalRestDataList {
     this.paymentDetails,
   });
 
+  set setOrderStatus(String val){
+    this.selectedOrderStatus = val;
+  }
+
   factory NormalRestDataList.fromJson(Map<String, dynamic>? json) => NormalRestDataList(
     menuOrderId: asT<String>(json, 'menuOrderId'),
     orderStatus: asT<int>(json, 'orderStatus'),

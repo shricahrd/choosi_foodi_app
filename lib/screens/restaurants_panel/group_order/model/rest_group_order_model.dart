@@ -112,6 +112,10 @@ class GroupRestDataList {
     this.deviceType = "",
   });
 
+  set setOrderStatus(String val){
+    this.selectedOrderStatus = val;
+  }
+
   factory GroupRestDataList.fromJson(Map<String, dynamic>? json) => GroupRestDataList(
     groupOrderId: asT<String>(json, 'groupOrderId'),
     orderStatus: asT<int>(json, 'orderStatus'),

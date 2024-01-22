@@ -38,7 +38,7 @@ class _GroupRestOrderScreenState extends State<GroupRestOrderScreen> {
   dynamic startDate = "", endDate = "", orderTypeData = "";
   int orderType = 1;
   double fontSize = 13.0;
-  List orderStatusType = [];
+  // List orderStatusType = [];
 
   // String createdDate = "", orderPlacedDate = "";
   List statusList = [];
@@ -54,17 +54,22 @@ class _GroupRestOrderScreenState extends State<GroupRestOrderScreen> {
     setState(() {
       _groupRestOrderController.isLoaderVisible = true;
     });
-    if (orderType == 1) {
+    if(widget.orderType == 2){
+      _groupRestOrderController.orderStatusFilter = 6;
+    }else if(widget.orderType == 3){
+      _groupRestOrderController.orderStatusFilter = 7;
+    }
+  /*  if (orderType == 1) {
       List filterList = [1, 2, 3, 4, 5];
       orderStatusType = filterList;
     } else if (orderType == 2) {
       orderStatusType.add(6);
     } else {
       orderStatusType.add(7);
-    }
+    }*/
 
     await _groupRestOrderController.callRestGetOrderAPI(
-      filterType: orderStatusType,
+      // filterType: orderStatusType,
       searchString: searchString,
       startDateSearch: startDate,
       endDateSearch: endDate,
@@ -72,27 +77,24 @@ class _GroupRestOrderScreenState extends State<GroupRestOrderScreen> {
     );
   }
 
-  checkOrderType(bool orderType) {
-    if (orderType == true) {
+  checkOrderType(bool orderType){
+    if(orderType == true){
       statusList = [
         selectOrderStatus,
         orderReceive,
         beingPrepare,
-        ready,
+        outforDelivery,
         delivered,
-        canceled,
       ];
-    } else {
+    }else {
       statusList = [
         selectOrderStatus,
         orderReceive,
         beingPrepare,
         readyPickup,
         picked,
-        canceled,
       ];
     }
-
     // debugPrint('statusList : ${statusList.toString()}');
   }
 
@@ -233,7 +235,7 @@ class _GroupRestOrderScreenState extends State<GroupRestOrderScreen> {
                               child: CircularProgressIndicator(
                               color: Color(ORANGE),
                             ))
-                          : logic.orderStatus == 0
+                          : logic.getFilterOrderModel.length == 0
                               ? Center(
                                   child: WidgetText.widgetPoppinsMediumText(
                                       'No Order Found',
@@ -244,10 +246,9 @@ class _GroupRestOrderScreenState extends State<GroupRestOrderScreen> {
                                   width: double.infinity,
                                   child: ListView.builder(
                                       physics: BouncingScrollPhysics(),
-                                      itemCount: logic.orderStatus,
+                                      itemCount: logic.getFilterOrderModel.length,
                                       itemBuilder: (context, index) {
-                                        debugPrint(
-                                            'OrderStatus screen len: ${logic.orderStatus}');
+                                        // debugPrint('OrderStatus screen len: ${logic.orderStatus}');
                                         debugPrint(
                                             'OrderStatus logic.getFilterOrderModel[index].orderType: ${logic.getFilterOrderModel[index].orderType}');
 
@@ -888,8 +889,8 @@ class _GroupRestOrderScreenState extends State<GroupRestOrderScreen> {
       setState(() {
         receivedData = result;
         debugPrint("receivedData=======> $receivedData");
-        debugPrint(
-            "receivedData selectOrderType=======> ${receivedData['selectOrderType']}");
+        // debugPrint("receivedData selectOrderType=======> ${receivedData['selectOrderType']}");
+        _groupRestOrderController.orderStatusFilter = receivedData['orderStatus'];
         startDate = receivedData["startDateSearch"];
         endDate = receivedData["endDateSearch"];
         orderTypeData = receivedData["selectOrderType"];

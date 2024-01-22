@@ -203,7 +203,7 @@ getOrderId(dynamic val){
     return 1;
   }else  if(val == beingPrepare){
     return 2;
-  }else  if(val == ready || val == readyPickup){
+  }else  if(val == outforDelivery || val == readyPickup){
     return 5;
   }else  if(val == delivered){
     return 6;
@@ -211,6 +211,26 @@ getOrderId(dynamic val){
     return 8;
   }else  if(val == canceled){
     return 7;
+  }
+}
+
+getOrderByName({required int val, required String isDelivery}){
+  if(val == 1){
+    return orderReceive;
+  }else  if(val == 2){
+    return beingPrepare;
+  }else  if(val == 5){
+    if(isDelivery == "DELIVERY") {
+      return outforDelivery;
+    }else{
+      return readyPickup;
+    }
+  }else  if(val == 6 || val == 7){
+    if(isDelivery == "DELIVERY") {
+      return delivered;
+    }else{
+      return picked;
+    }
   }
 }
 

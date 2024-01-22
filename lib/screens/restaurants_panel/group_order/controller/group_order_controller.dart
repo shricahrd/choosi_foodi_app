@@ -18,7 +18,7 @@ import '../model/rest_group_order_model.dart';
 class GroupRestOrderController extends GetxController {
   RestGroupOrderModel groupRestOrderModel = RestGroupOrderModel();
   List<GroupRestDataList> getFilterOrderModel = [];
-  int orderStatus = 0;
+  // int orderStatus = 0;
   bool isLoaderVisible = true;
   bool isOrderChanged = false;
   MetaModel metaModel = MetaModel();
@@ -106,7 +106,7 @@ class GroupRestOrderController extends GetxController {
 
 
   Future<void> callRestGetOrderAPI(
-      {required List filterType,
+      {
       required String searchString,
        dynamic startDateSearch,
        dynamic endDateSearch,
@@ -120,7 +120,7 @@ class GroupRestOrderController extends GetxController {
         debugPrint('endDateinMiliSec $endDateSearch');
     }
 
-    debugPrint('filterType: $filterType');
+    /*debugPrint('filterType: $filterType');
 
       if(filterType.contains(1)){
         orderStatusFilter = 1;
@@ -128,7 +128,7 @@ class GroupRestOrderController extends GetxController {
         orderStatusFilter = 6;
       }else{
         orderStatusFilter = 7;
-      }
+      }*/
       debugPrint('orderStatusFilter: $orderStatusFilter');
       // update();
 
@@ -149,47 +149,36 @@ class GroupRestOrderController extends GetxController {
         groupRestOrderModel =
             RestGroupOrderModel.fromJson(json.decode(response.body));
         if (groupRestOrderModel.meta?.status == true) {
-          debugPrint('status true: ${groupRestOrderModel.meta?.status}');
-          debugPrint('Response Data: ${groupRestOrderModel.data}');
+          // debugPrint('status true: ${groupRestOrderModel.meta?.status}');
+          // debugPrint('Response Data: ${groupRestOrderModel.data}');
 
-          int len = 0;
           for (int i = 0; i < (groupRestOrderModel.data?.length ?? 0); i++) {
             String currentName = groupRestOrderModel.data?[i].groupOrderID ?? "";
-            for (int j = 0; j < filterType.length; j++) {
-              // Check if the name is not in the Set (not a duplicate)
-              if (!uniqueNames.contains(currentName)) {
-                groupRestOrderModel.data?[i].setCreatedDate = parseTimeStampReport(groupRestOrderModel.data?[i].createdAt);
+            if (!uniqueNames.contains(currentName)) {
+              groupRestOrderModel.data?[i].setCreatedDate = parseTimeStampReport(groupRestOrderModel.data?[i].createdAt);
 
-                debugPrint("Deleivery date $i ===> ${groupRestOrderModel.data?[i].deliveryDate}");
-                if(groupRestOrderModel.data?[i].deliveryDate != 0 && groupRestOrderModel.data?[i].deliveryDate.toString().isNotEmpty == true && groupRestOrderModel.data?[i].deliveryDate != null) {
-                  // if (groupRestOrderModel.data?[i].deliveryDate != 0) {
-                    groupRestOrderModel.data?[i].setDeliveryDate =
-                        parseDeliveryTime(
-                            groupRestOrderModel.data?[i].deliveryDate);
-                  } else {
-                    groupRestOrderModel.data?[i].setDeliveryDate = "";
-                  // }
-                }
-
-                if (groupRestOrderModel.data?[i].orderStatus == filterType[j]) {
-                  len++;
-                  getFilterOrderModel.add(groupRestOrderModel.data![i]);
-                }
-                uniqueNames.add(currentName);
+              groupRestOrderModel.data?[i].setOrderStatus = getOrderByName(val: groupRestOrderModel.data?[i].orderStatus ?? 0,
+                  isDelivery: groupRestOrderModel.data?[i].orderType ?? "");
+              // debugPrint("Deleivery date $i ===> ${groupRestOrderModel.data?[i].deliveryDate}");
+              if(groupRestOrderModel.data?[i].deliveryDate != 0 && groupRestOrderModel.data?[i].deliveryDate.toString().isNotEmpty == true && groupRestOrderModel.data?[i].deliveryDate != null) {
+                groupRestOrderModel.data?[i].setDeliveryDate =
+                    parseDeliveryTime(
+                        groupRestOrderModel.data?[i].deliveryDate);
+              } else {
+                groupRestOrderModel.data?[i].setDeliveryDate = "";
               }
 
+              getFilterOrderModel.add(groupRestOrderModel.data![i]);
+              uniqueNames.add(currentName);
             }
           }
 
-          orderStatus = len;
           update();
           debugPrint('OrderStatus Len: $orderStatus');
           isLoaderVisible = false;
           update();
         } else {
-          // showToastMessage(normalRestOrderModel.meta!.msg.toString());
           debugPrint(groupRestOrderModel.meta?.msg.toString());
-          orderStatus = 0;
           isLoaderVisible = false;
           update();
         }

@@ -28,10 +28,12 @@ class _FilterOrdersScreenState extends State<FilterOrdersScreen> {
   late String _startDate, _endDate;
   // String? selectStatus = "Order Status";
   String? selectOrderType = selOrderType;
+  String selectOrderStatus = orderReceive;
   // String? selectDeliveryType = "Pickup";
   var startDateSearch, endDateSearch;
   List statusList = ['Order Status', 'Accepted', 'Pending',];
   List deliveryList = [selOrderType, 'Pickup', 'Delivery','Scheduled'];
+  List orderStatusList = [orderReceive, beingPrepare, "$outforDelivery/$readyPickup",];
 
   @override
   void initState() {
@@ -96,6 +98,72 @@ class _FilterOrdersScreenState extends State<FilterOrdersScreen> {
             children: [
               SizedBox(
                 height: 20,
+              ),
+              widget.orderType == 2 || widget.orderType == 3 ? Container() :
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Card(
+                  // margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: 15, vertical: 10),
+                  elevation: 3.0,
+                  shadowColor: Color(BLACK),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(WHITE),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    child: DropdownButton(
+                      underline: Container(),
+                      borderRadius: BorderRadius.circular(10),
+                      icon: Visibility(
+                        visible: true,
+                        child: Image.asset(
+                          ic_down_arrow,
+                          height: 10,
+                          width: 20,
+                          color: Color(DARKGREY),
+                        ),
+                      ),
+                      isExpanded: true,
+                      value: selectOrderStatus,
+                      style: TextStyle(
+                        color: Color(BLACK),
+                        fontSize: 14,
+                        fontFamily: FontPoppins,
+                        fontWeight: PoppinsRegular,
+                      ),
+                      onChanged: (value) {
+                        // debugPrint('selected value : $value');
+                        selectOrderStatus = value.toString();
+                        debugPrint('selected OrderStatus : $selectOrderStatus');
+                        setState(() {
+
+                        });
+                      },
+                      items: orderStatusList.map((dynamic value) {
+                        return DropdownMenuItem<String>(
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                              color: Color(BLACK),
+                              fontSize: 14,
+                              fontFamily: FontPoppins,
+                              fontWeight: RobotoRegular,
+                            ),
+                          ),
+                          value: value,
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+              widget.orderType == 2 || widget.orderType == 3 ? Container() :
+              SizedBox(
+                height: 15,
               ),
               Container(
                 height: 70,
@@ -335,18 +403,32 @@ class _FilterOrdersScreenState extends State<FilterOrdersScreen> {
 
   onClickExport() {
     // debugPrint("selectOrderType: ${selectOrderType},widget.orderType: ${widget.orderType} ");
-    final data = {
-      'orderType': widget.orderType,
-      'startDateSearch': startDateSearch ?? "",
-      'endDateSearch': endDateSearch ?? "",
-      'selectOrderType': selectOrderType,
-      'searchKey': textInputField.text,
-    };
-    debugPrint("data: $data");
-    Get.back(canPop: true, result: data);
-    // Navigator.of(context).pushReplacement(MaterialPageRoute(
-    //     builder: (BuildContext context) =>
-    //         NormalRestOrderScreen(orderType: widget.orderType, startDate: '$startDateSearch', endDate: '$endDateSearch', orderTypeData: '$selectOrderType', searchKey: '${textInputField.text}',)));
+
+    int selOrderSTs = 1;
+    if(widget.orderType == 1 ) {
+      if (selectOrderStatus == orderStatusList[0]) {
+        selOrderSTs = 1;
+      } else if (selectOrderStatus == orderStatusList[1]) {
+        selOrderSTs = 2;
+      } else if (selectOrderStatus == orderStatusList[2]) {
+        selOrderSTs = 5;
+      }
+    }else if(widget.orderType == 2){
+      selOrderSTs = 6;
+    }else if(widget.orderType == 3){
+      selOrderSTs = 7;
+    }
+
+      final data = {
+        'orderType': widget.orderType,
+        'orderStatus': selOrderSTs,
+        'startDateSearch': startDateSearch ?? "",
+        'endDateSearch': endDateSearch ?? "",
+        'selectOrderType': selectOrderType,
+        'searchKey': textInputField.text,
+      };
+      debugPrint("data: $data");
+      Get.back(canPop: true, result: data);
   }
 }
 
